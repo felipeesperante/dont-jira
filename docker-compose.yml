@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8.4
+    container_name: dont-jira-db
+    environment:
+      MYSQL_DATABASE: dont_jira
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dont-jira-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/dont_jira
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: dont-jira-frontend
+    ports:
+      - "9000:80"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:

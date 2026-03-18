@@ -103,3 +103,32 @@ A camada web **não deve criar endpoints próprios nem consumir endpoints fora d
 Este projeto está licenciado sob a **GNU Affero General Public License v3.0 (AGPL-3.0)**.
 
 Consulte o arquivo [LICENSE](./LICENSE) para o texto completo.
+
+## Contrato Swagger/OpenAPI
+
+O contrato inicial da API está em:
+
+- `swagger/openapi.yaml`
+
+Este arquivo deve ser a fonte para geração de client no frontend e para alinhamento dos métodos de controller no backend.
+
+## Docker (módulos desacoplados)
+
+Os módulos rodam de forma desacoplada, cada um com seu próprio Dockerfile:
+
+- `backend/Dockerfile`
+- `frontend/Dockerfile`
+
+Também foi adicionado `docker-compose.yml` para orquestração local dos módulos e do banco MySQL.
+
+### Subir ambiente completo
+
+```bash
+docker compose up --build
+```
+
+Serviços:
+
+- Frontend: `http://localhost:9000`
+- Backend: `http://localhost:8080`
+- MySQL: `localhost:3306`
